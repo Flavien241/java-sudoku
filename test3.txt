@@ -1,0 +1,107 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+public class Main {
+    private static final String[] couleurs = {
+    "\u001B[100m", // Gris foncé (arrière-plan gris foncé)
+    "\u001B[42m", // Vert clair (arrière-plan vert)
+    "\u001B[43m", // Jaune vif (arrière-plan jaune)
+    "\u001B[44m", // Bleu vif (arrière-plan bleu)
+    "\u001B[45m", // Magenta clair (arrière-plan magenta)
+    "\u001B[46m", // Cyan clair (arrière-plan cyan)
+    };
+
+    public static void main(String[] args) {
+    try (PrintWriter logWriter = new PrintWriter(new FileWriter("sudoku_solution.txt"))) {
+        Grille sudoku = new Grille(1, 5, logWriter);
+        List<String> symbolesPossibles = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9");
+        // Initialize the blocks and their cases manually
+        Bloc bloc0 = new Bloc(0,symbolesPossibles);
+        bloc0.ajouterCase(new Case(1, ".", 0, 0, bloc0));
+        bloc0.ajouterCase(new Case(1, "1", 1, 0, bloc0));
+        bloc0.ajouterCase(new Case(1, "5", 1, 1, bloc0));
+        bloc0.ajouterCase(new Case(1, ".", 2, 0, bloc0));
+        bloc0.ajouterCase(new Case(1, ".", 2, 1, bloc0));
+        sudoku.ajouterBloc(bloc0);
+
+        Bloc bloc1 = new Bloc(1,symbolesPossibles);
+        bloc1.ajouterCase(new Case(1, "4", 0, 1, bloc1));
+        bloc1.ajouterCase(new Case(1, ".", 0, 2, bloc1));
+        bloc1.ajouterCase(new Case(1, ".", 0, 3, bloc1));
+        bloc1.ajouterCase(new Case(1, ".", 1, 2, bloc1));
+        bloc1.ajouterCase(new Case(1, ".", 2, 2, bloc1));
+        sudoku.ajouterBloc(bloc1);
+
+        Bloc bloc2 = new Bloc(2,symbolesPossibles);
+        bloc2.ajouterCase(new Case(1, ".", 0, 4, bloc2));
+        bloc2.ajouterCase(new Case(1, ".", 1, 4, bloc2));
+        bloc2.ajouterCase(new Case(1, ".", 2, 4, bloc2));
+        bloc2.ajouterCase(new Case(1, "4", 3, 4, bloc2));
+        bloc2.ajouterCase(new Case(1, ".", 4, 4, bloc2));
+        sudoku.ajouterBloc(bloc2);
+
+        Bloc bloc3 = new Bloc(3,symbolesPossibles);
+        bloc3.ajouterCase(new Case(1, ".", 1, 3, bloc3));
+        bloc3.ajouterCase(new Case(1, ".", 2, 3, bloc3));
+        bloc3.ajouterCase(new Case(1, "2", 3, 3, bloc3));
+        bloc3.ajouterCase(new Case(1, ".", 3, 1, bloc3));
+        bloc3.ajouterCase(new Case(1, ".", 3, 2, bloc3));
+
+        sudoku.ajouterBloc(bloc3);
+
+        Bloc bloc4 = new Bloc(4,symbolesPossibles);
+        bloc4.ajouterCase(new Case(1, ".", 3, 0, bloc4));
+        bloc4.ajouterCase(new Case(1, ".", 4, 0, bloc4));
+        bloc4.ajouterCase(new Case(1, ".", 4, 1, bloc4));
+        bloc4.ajouterCase(new Case(1, ".", 4, 2, bloc4));
+        bloc4.ajouterCase(new Case(1, "3", 4, 3, bloc4));
+
+        sudoku.ajouterBloc(bloc4);
+
+   
+    
+        // Afficher la grille avant résolution (console uniquement)
+        System.out.println("Grille avant résolution :");
+        afficherGrille(sudoku);
+
+        // Vérifier si la grille est valide
+        if (!sudoku.estValide()) {
+            System.out.println("\nLa grille n'est pas valide. Impossible de résoudre.");
+            logWriter.println("Erreur : La grille n'est pas valide. Résolution impossible.");
+            return;
+        }
+
+        // Résoudre la grille avec backtracking (logs uniquement dans le fichier)
+        sudoku.resoudreParBacktracking();
+
+        // Afficher la grille après résolution (console uniquement)
+        System.out.println("\nGrille après résolution :");
+        afficherGrille(sudoku);
+
+        // Vérifier si la grille est valide après résolution
+        System.out.println("\nGrille valide ? " + sudoku.estValide());
+        logWriter.println("\nGrille valide ? " + sudoku.estValide());
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    System.out.println("Résultat enregistré dans 'sudoku_solution.txt'.");
+}
+
+// Affichage de la grille uniquement dans la console
+private static void afficherGrille(Grille grille) {
+    for (int i = 0; i < grille.getTaille(); i++) {
+        for (int j = 0; j < grille.getTaille(); j++) {
+            Case c = grille.getCase(i, j);
+            int blocId = c.getBloc().getId();
+            String value = c.estVide() ? "." : c.getValeur();
+
+            System.out.print(couleurs[blocId % couleurs.length] + value + " \u001B[0m ");
+        }
+        System.out.println();
+    }
+}
+}

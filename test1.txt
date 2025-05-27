@@ -1,0 +1,72 @@
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // Création de la grille 4x4
+        Grille sudoku = new Grille(1, 4);
+        List<String> symbolesPossibles = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+        // Création des blocs 2x2
+        Bloc bloc0 = new Bloc(0,symbolesPossibles); // Coin supérieur gauche
+        Bloc bloc1 = new Bloc(1,symbolesPossibles); // Coin supérieur droit
+        Bloc bloc2 = new Bloc(2,symbolesPossibles); // Coin inférieur gauche
+        Bloc bloc3 = new Bloc(3,symbolesPossibles); // Coin inférieur droit
+
+        // Bloc 0 (2x2 en haut à gauche)
+        bloc0.ajouterCase(new Case(1, "1", 0, 0, bloc0));
+        bloc0.ajouterCase(new Case(1, "2", 0, 1, bloc0));
+        bloc0.ajouterCase(new Case(1, "3", 1, 0, bloc0));
+        bloc0.ajouterCase(new Case(1, "4", 1, 1, bloc0));
+
+        // Bloc 1 (2x2 en haut à droite)
+        bloc1.ajouterCase(new Case(1, "3", 0, 2, bloc1));
+        bloc1.ajouterCase(new Case(1, "4", 0, 3, bloc1));
+        bloc1.ajouterCase(new Case(1, "1", 1, 2, bloc1));
+        bloc1.ajouterCase(new Case(1, "2", 1, 3, bloc1));
+
+        // Bloc 2 (2x2 en bas à gauche)
+        bloc2.ajouterCase(new Case(1, "2", 2, 0, bloc2));
+        bloc2.ajouterCase(new Case(1, "1", 2, 1, bloc2));
+        bloc2.ajouterCase(new Case(1, "4", 3, 0, bloc2));
+        bloc2.ajouterCase(new Case(1, "3", 3, 1, bloc2));
+
+        // Bloc 3 (2x2 en bas à droite)
+        bloc3.ajouterCase(new Case(1, "4", 2, 2, bloc3));
+        bloc3.ajouterCase(new Case(1, ".", 2, 3, bloc3)); // Case vide
+        bloc3.ajouterCase(new Case(1, ".", 3, 2, bloc3)); // Case vide
+        bloc3.ajouterCase(new Case(1, "1", 3, 3, bloc3));
+
+        // Ajout des blocs à la grille
+        sudoku.ajouterBloc(bloc0);
+        sudoku.ajouterBloc(bloc1);
+        sudoku.ajouterBloc(bloc2);
+        sudoku.ajouterBloc(bloc3);
+
+        // Affichage de la grille initiale
+        System.out.println("Grille Sudoku initiale :");
+        afficherGrille(sudoku);
+
+        
+    }
+
+    private static void afficherGrille(Grille grille) {
+        System.out.println("╔═══╦═══╦═══╗");
+        for (int i = 0; i < grille.getTaille(); i++) {
+            System.out.print("║ ");
+            for (int j = 0; j < grille.getTaille(); j++) {
+                Case c = grille.getCase(i, j);
+                String value = (c != null && !c.estVide()) ? c.getValeur() : ".";
+                System.out.print(value + " ");
+                if ((j + 1) % 2 == 0 && j != grille.getTaille() - 1) {
+                    System.out.print("║ ");
+                }
+            }
+            System.out.println("║");
+            if ((i + 1) % 2 == 0 && i != grille.getTaille() - 1) {
+                System.out.println("╠═══╬═══╬═══╣");
+            }
+        }
+        System.out.println("╚═══╩═══╩═══╝");
+    }
+}
