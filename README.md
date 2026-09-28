@@ -84,13 +84,13 @@ Some test files use color-coded output for better readability. Example output fo
 ##  Author
 
 **Flavien BONTEMPS**  
-Polytech Lyon – 1st year of Computer Engineering Cycle (equiv. Master’s level)  
+Polytech Lyon - Computer Science Engineering curriculum
 flavienbontemps24@gmail.com  
 [LinkedIn](https://www.linkedin.com/in/BONTEMPSFlavien)
 
 ---
 
-##  License
+## Scope
 
-You may reuse the code for educational purposes. For other use cases, please contact the author.
+Academic Java project demonstrating object-oriented modelling, constraint checking and backtracking on Sudoku variants.
 
